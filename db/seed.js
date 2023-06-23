@@ -16,12 +16,17 @@ const seed = async ({ shopData, treasureData }) => {
 
   const refObj = createRef("shop_name", "shop_id", insertedShops);
 
-  const formattedTresures = formatData(refObj, "shop", "shop_id", treasureData);
+  const formattedTreasures = formatData(
+    refObj,
+    "shop",
+    "shop_id",
+    treasureData
+  );
 
   await db.query(
     format(
       `INSERT INTO treasures (treasure_name, colour, age, cost_at_auction, shop_id) VALUES %L RETURNING *`,
-      formattedTresures.map(
+      formattedTreasures.map(
         ({ treasure_name, colour, age, cost_at_auction, shop_id }) => [
           treasure_name,
           colour,

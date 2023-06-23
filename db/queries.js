@@ -13,5 +13,3 @@ exports.createTreasuresQuery = `CREATE TABLE treasures (
     cost_at_auction FLOAT,
     shop_id INT REFERENCES shops(shop_id));
     `;
-
-I;
