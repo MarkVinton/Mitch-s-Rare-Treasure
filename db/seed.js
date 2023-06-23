@@ -1,11 +1,37 @@
 const db = require("./");
+const format = require("pg-format");
 
-const seed = ({ shopData, treasureData }) => {
-	return db.query(`DROP TABLE IF EXISTS treasures;`).then(() => {
-		// drop any existing shops table
-	});
-	// then: create some new tables - but which first and why?
-	// then: insert the raw data into the tables.
+const manageTables = require("./manage-tables");
+const { createRef, formatData } = require("./utils");
+
+const seed = async ({ shopData, treasureData }) => {
+  await manageTables();
+
+  const { rows: insertedShops } = await db.query(
+    format(
+      `INSERT INTO shops (shop_name, owner, slogan) VALUES %L RETURNING *`,
+      shopData.map(({ shop_name, owner, slogan }) => [shop_name, owner, slogan])
+    )
+  );
+
+  const refObj = createRef("shop_name", "shop_id", insertedShops);
+
+  const formattedTresures = formatData(refObj, "shop", "shop_id", treasureData);
+
+  await db.query(
+    format(
+      `INSERT INTO treasures (treasure_name, colour, age, cost_at_auction, shop_id) VALUES %L RETURNING *`,
+      formattedTresures.map(
+        ({ treasure_name, colour, age, cost_at_auction, shop_id }) => [
+          treasure_name,
+          colour,
+          age,
+          cost_at_auction,
+          shop_id,
+        ]
+      )
+    )
+  );
 };
 
 module.exports = seed;
