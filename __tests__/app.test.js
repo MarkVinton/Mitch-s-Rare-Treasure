@@ -52,3 +52,46 @@ describe("GET /notARoute", () => {
       });
   });
 });
+
+describe("GET /api/treasures?sort_by", () => {
+  it("responds with an array of treasures sorted by age, ascending", () => {
+    return request(app)
+      .get("/api/treasures?sort_by=age")
+      .expect(200)
+      .then(({ body: { treasures } }) => {
+        expect(treasures).toBeSortedBy("age");
+      });
+  });
+  it("responds with an array of treasures sorted by cost_at_auction, ascending", () => {
+    return request(app)
+      .get("/api/treasures?sort_by=cost_at_auction")
+      .expect(200)
+      .then(({ body: { treasures } }) => {
+        expect(treasures).toBeSortedBy("cost_at_auction");
+      });
+  });
+  it("responds with an array of treasures sorted by treasure_name, ascending", () => {
+    return request(app)
+      .get("/api/treasures?sort_by=treasure_name")
+      .expect(200)
+      .then(({ body: { treasures } }) => {
+        expect(treasures).toBeSortedBy("treasure_name");
+      });
+  });
+  it("400: responds with Bad request when trying SQL injection", () => {
+    return request(app)
+      .get("/api/treasures?sort_by=age ; DROP TABLE treasures")
+      .expect(400)
+      .then(({ body: { message } }) => {
+        expect(message).toBe("Bad Request");
+      });
+  });
+  it("400: responds with Bad Request when using invalid query", () => {
+    return request(app)
+      .get("/api/treasures?sort_by=colour")
+      .expect(400)
+      .then(({ body: { message } }) => {
+        expect(message).toBe("Bad Request");
+      });
+  });
+});
