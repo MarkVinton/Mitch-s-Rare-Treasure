@@ -1,6 +1,6 @@
 const { Pool } = require("pg");
 
-const ENV = process.env.NODE_ENV || "development";
+const ENV = process.env.NODE_ENV || "dev";
 
 const path = `${__dirname}/../.env.${ENV}`;
 
