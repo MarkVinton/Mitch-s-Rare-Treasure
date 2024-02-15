@@ -1,3 +1,4 @@
+const treasures = require("../db/data/test-data/treasures");
 const db = require("../db/index");
 const format = require("pg-format");
 
@@ -39,4 +40,11 @@ const readAllTreasuresByColour = (colour) => {
       }
     })
 }
-module.exports = { readAllTreasures,readAllTreasuresByColour };
+const createTreasure = ({treasure_name, colour, age, cost_at_auction, shop_id}) => {
+const queryString = 'INSERT INTO treasures (treasure_name, colour, age, cost_at_auction, shop_id) VALUES ($1, $2, $3, $4, $5) RETURNING *;' 
+return db.query(queryString,[treasure_name, colour, age,cost_at_auction, shop_id])
+.then(({rows}) => {
+return rows[0]
+})
+}
+module.exports = { readAllTreasures,readAllTreasuresByColour, createTreasure };

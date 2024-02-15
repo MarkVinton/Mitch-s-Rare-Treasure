@@ -123,8 +123,8 @@ describe("GET /api/treasures?order=desc", () => {
   });
 });
 
-describe('GET /api/treasures?colour=gold', () => {
-  test('200: responds with array of treasures only containing treasures with colour gold', () => {
+describe("GET /api/treasures?colour=gold", () => {
+  test("200: responds with array of treasures only containing treasures with colour gold", () => {
     return request(app)
       .get("/api/treasures?colour=gold")
       .expect(200)
@@ -132,12 +132,50 @@ describe('GET /api/treasures?colour=gold', () => {
         expect(treasures.length).toBe(2);
       });
   });
-  test('400: responds with bad request when using an invalid query', () => {
+  test("400: responds with bad request when using an invalid query", () => {
     return request(app)
-    .get("/api/treasures?colour=notcolour")
-    .expect(400)
-    .then(({ body: { message } }) => {
-      expect(message).toBe("Bad Request");
-    });
+      .get("/api/treasures?colour=notcolour")
+      .expect(400)
+      .then(({ body: { message } }) => {
+        expect(message).toBe("Bad Request");
+      });
+  });
+});
+
+describe.only("POST /api/treasures", () => {
+  test("201: inserts new treasure to the shop", () => {
+    const body = {
+      treasure_name: "treasure-a1",
+      colour: "gold",
+      age: 4,
+      cost_at_auction: 10,
+      shop_id: 1,
+    };
+    return request(app)
+      .post("/api/treasures")
+      .send(body)
+      .expect(201)
+      .then(({body:{treasure}}) => {
+        const newTreasure = {
+          treasure_id: 27,
+          treasure_name: "treasure-a1",
+          colour: "gold",
+          age: 4,
+          cost_at_auction: 10,
+          shop_id: 1,
+        };
+        expect(treasure).toMatchObject(newTreasure);
+      });
+  });
+  test.only('POST:400 responds with an appropriate status and error message when provided with a bad team (no team name)', () => {
+    return request(app)
+      .post('/api/treasures')
+      .send({
+        treasure_name: "treasure-a2"
+      })
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe('Bad request');
+      });
   });
 });
