@@ -95,3 +95,30 @@ describe("GET /api/treasures?sort_by", () => {
       });
   });
 });
+
+describe("GET /api/treasures?order=desc", () => {
+  it("responds with an array of treasures sorted by age, descending", () => {
+    return request(app)
+      .get("/api/treasures?order=desc")
+      .expect(200)
+      .then(({ body: { treasures } }) => {
+        expect(treasures).toBeSortedBy("age", { descending: true });
+      });
+  });
+  it("400: responds with Bad Request when using invalid query", () => {
+    return request(app)
+      .get("/api/treasures?order=colour")
+      .expect(400)
+      .then(({ body: { message } }) => {
+        expect(message).toBe("Bad Request");
+      });
+  });
+  it("400: responds with Bad request when trying SQL injection", () => {
+    return request(app)
+      .get("/api/treasures?order=desc ; DROP TABLE treasures")
+      .expect(400)
+      .then(({ body: { message } }) => {
+        expect(message).toBe("Bad Request");
+      });
+  });
+});

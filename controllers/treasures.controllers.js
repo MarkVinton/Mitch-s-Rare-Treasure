@@ -1,13 +1,13 @@
 const { readAllTreasures } = require("../models/treasures.models");
 
 const getTreasures = (req, res, next) => {
-  const { sort_by = "age" } = req.query;
-
-  readAllTreasures(sort_by)
+  const { sort_by = 'age', order = 'asc' } = req.query;
+  readAllTreasures(sort_by,order)
     .then(({ rows }) => {
       res.status(200).send({ treasures: rows });
     })
     .catch(next);
+
 };
 
 module.exports = { getTreasures };
