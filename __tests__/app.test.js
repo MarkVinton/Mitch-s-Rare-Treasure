@@ -8,7 +8,7 @@ beforeEach(() => seed(data));
 
 afterAll(() => db.end());
 
-describe.only("GET /api/treasures", () => {
+describe("GET /api/treasures", () => {
   it("responds with a 200 status code", () => {
     return request(app).get("/api/treasures").expect(200);
   });
@@ -37,7 +37,18 @@ describe.only("GET /api/treasures", () => {
       .expect(200)
       .then(({ body: { treasures } }) => {
         expect(treasures.length).toBe(26);
-        expect(treasures).toBeSortedBy("age")
+        expect(treasures).toBeSortedBy("age");
+      });
+  });
+});
+
+describe("GET /notARoute", () => {
+  it("404: responds with 404 Not Found", () => {
+    return request(app)
+      .get("/notARoute")
+      .expect(404)
+      .then(({ body: { message } }) => {
+        expect(message).toBe("Not Found");
       });
   });
 });
