@@ -122,3 +122,22 @@ describe("GET /api/treasures?order=desc", () => {
       });
   });
 });
+
+describe('GET /api/treasures?colour=gold', () => {
+  test('200: responds with array of treasures only containing treasures with colour gold', () => {
+    return request(app)
+      .get("/api/treasures?colour=gold")
+      .expect(200)
+      .then(({ body: { treasures } }) => {
+        expect(treasures.length).toBe(2);
+      });
+  });
+  test('400: responds with bad request when using an invalid query', () => {
+    return request(app)
+    .get("/api/treasures?colour=notcolour")
+    .expect(400)
+    .then(({ body: { message } }) => {
+      expect(message).toBe("Bad Request");
+    });
+  });
+});
