@@ -78,4 +78,13 @@ const createTreasure = (treasure) => {
     });
 };
 
-module.exports = { readAllTreasures, readAllTreasuresByColour, createTreasure };
+const updateTreasure = (cost_at_auction, treasure_id) => {
+console.log(cost_at_auction);
+console.log(treasure_id);
+const queryString = 'UPDATE treasures SET cost_at_auction = $1 WHERE treasure_id = $2 RETURNING *;'
+return db.query(queryString,[cost_at_auction, treasure_id])
+.then(({rows}) => {
+  return rows[0]
+})
+}
+module.exports = { readAllTreasures, readAllTreasuresByColour, createTreasure, updateTreasure };

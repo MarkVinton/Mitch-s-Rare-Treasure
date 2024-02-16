@@ -194,3 +194,19 @@ describe("POST /api/treasures", () => {
       });
   });
 });
+
+describe.only('PATCH /api/treasures/:treasure_id', () => {
+  test('PATCH 200 should update treasures cost_at_auction value', () => {
+    return request(app)
+    .patch('/api/treasures/1')
+    .send({cost_at_auction: 100})
+    .expect(200)
+    .then(({ body: { treasure } }) => {
+      const patchedTreasure = {
+        ...treasure,
+        cost_at_auction: 100
+      };
+      expect(treasure).toMatchObject(patchedTreasure);
+    });
+  });
+});
