@@ -32,6 +32,7 @@ const patchTreasure = (req,res,next) => {
   .then((treasure) => {
     res.status(200).send({treasure})
   })
+  .catch(next)
 }
 
 module.exports = { getTreasures, postTreasures, patchTreasure };

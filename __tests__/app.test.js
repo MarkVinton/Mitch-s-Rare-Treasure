@@ -209,4 +209,13 @@ describe.only('PATCH /api/treasures/:treasure_id', () => {
       expect(treasure).toMatchObject(patchedTreasure);
     });
   });
+  test('PATCH 400 responds with appropriate status and error when given an non-existent treasure', () => {
+    return request(app)
+    .patch('/api/treasures/99')
+    .send({cost_at_auction: 100})
+    .expect(400)
+    .then(({ body: { message } }) => {
+      expect(message).toBe('Bad Request');
+    });
+  });
 });
