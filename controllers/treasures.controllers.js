@@ -1,4 +1,4 @@
-const { readAllTreasures,readAllTreasuresByColour,createTreasure,updateTreasure } = require("../models/treasures.models");
+const { readAllTreasures,readAllTreasuresByColour,createTreasure,updateTreasure, removeTreasureById } = require("../models/treasures.models");
 
 const getTreasures = (req, res, next) => {
   const { sort_by = 'age', order = 'asc',colour } = req.query;
@@ -34,5 +34,12 @@ const patchTreasure = (req,res,next) => {
   })
   .catch(next)
 }
-
-module.exports = { getTreasures, postTreasures, patchTreasure };
+const deleteTreasure = (req,res,next) => {
+  const {treasure_id} = req.params
+  removeTreasureById(treasure_id)
+  .then(() => {
+    res.status(204).send()
+  })
+  .catch(next)
+}
+module.exports = { getTreasures, postTreasures, patchTreasure, deleteTreasure };

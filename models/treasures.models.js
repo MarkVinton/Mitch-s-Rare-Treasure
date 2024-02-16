@@ -2,6 +2,7 @@ const { property } = require("lodash");
 const treasures = require("../db/data/test-data/treasures");
 const db = require("../db/index");
 const format = require("pg-format");
+const { response } = require("../app");
 
 const readAllTreasures = (sort_by, order) => {
   if (
@@ -101,10 +102,22 @@ const updateTreasure = (cost_at_auction, treasure_id) => {
   }
 };
 
+const removeTreasureById = (treasure_id) => {
+ const queryString = 'DELETE FROM treasures WHERE treasure_id = $1'
+ return db.query(queryString, [treasure_id]).then(({rowCount}) =>{
+  if (rowCount === 0) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+    });
+  }
+ })
+}
 
 module.exports = {
   readAllTreasures,
   readAllTreasuresByColour,
   createTreasure,
-  updateTreasure,
+  updateTreasure, 
+  removeTreasureById
 };

@@ -195,7 +195,7 @@ describe("POST /api/treasures", () => {
   });
 });
 
-describe.only('PATCH /api/treasures/:treasure_id', () => {
+describe('PATCH /api/treasures/:treasure_id', () => {
   test('PATCH 200 should update treasures cost_at_auction value', () => {
     return request(app)
     .patch('/api/treasures/1')
@@ -235,5 +235,29 @@ describe.only('PATCH /api/treasures/:treasure_id', () => {
     .then(({ body: { message } }) => {
       expect(message).toBe('Bad Request');
     });
+  });
+});
+
+describe.only('DELETE /api/treasures/:treasure_id', () => {
+  test('DELETE 204 deletes specified treasure using treasure_id', () => {
+    return request(app)
+    .delete('/api/treasures/1')
+    .expect(204)
+  });
+  test('DELETE 404 responds with appropriate status and error when given a valid non-existent treasure', () => {
+    return request(app)
+    .delete('/api/treasures/99')
+    .expect(404)
+    .then(({body: {message}}) => {
+      expect(message).toBe('Not Found');
+    })
+  });
+  test('DELETE 400 responds with appropriate status and error when given an invalid treasure_id', () => {
+    return request(app)
+    .delete('/api/treasures/hello')
+    .expect(400)
+    .then(({body: {message}}) => {
+      expect(message).toBe('Bad Request');
+    })
   });
 });
