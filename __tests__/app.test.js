@@ -238,7 +238,7 @@ describe('PATCH /api/treasures/:treasure_id', () => {
   });
 });
 
-describe.only('DELETE /api/treasures/:treasure_id', () => {
+describe('DELETE /api/treasures/:treasure_id', () => {
   test('DELETE 204 deletes specified treasure using treasure_id', () => {
     return request(app)
     .delete('/api/treasures/1')
@@ -258,6 +258,23 @@ describe.only('DELETE /api/treasures/:treasure_id', () => {
     .expect(400)
     .then(({body: {message}}) => {
       expect(message).toBe('Bad Request');
+    })
+  });
+});
+
+describe('GET /api/shops', () => {
+  test('GET 200 responds with ann arroy of all shops', () => {
+    return request(app)
+    .get('/api/shops')
+    .expect(200)
+    .then(({body: {shops}}) =>{
+      expect(shops.length).toBe(11);
+      shops.forEach((shop) => {
+        expect(shop).toHaveProperty('shop_id', expect.any(Number));
+        expect(shop).toHaveProperty('shop_name', expect.any(String));
+        expect(shop).toHaveProperty('slogan', expect.any(String));
+        expect(shop).toHaveProperty('stock_value', expect.any(Number));
+      })
     })
   });
 });

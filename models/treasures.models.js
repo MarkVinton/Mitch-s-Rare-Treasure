@@ -1,8 +1,6 @@
-const { property } = require("lodash");
-const treasures = require("../db/data/test-data/treasures");
+
 const db = require("../db/index");
 const format = require("pg-format");
-const { response } = require("../app");
 
 const readAllTreasures = (sort_by, order) => {
   if (
