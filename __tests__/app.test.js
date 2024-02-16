@@ -142,7 +142,7 @@ describe("GET /api/treasures?colour=gold", () => {
   });
 });
 
-describe.only("POST /api/treasures", () => {
+describe("POST /api/treasures", () => {
   test("201: inserts new treasure to the shop", () => {
     const body = {
       treasure_name: "treasure-a1",
@@ -155,7 +155,7 @@ describe.only("POST /api/treasures", () => {
       .post("/api/treasures")
       .send(body)
       .expect(201)
-      .then(({body:{treasure}}) => {
+      .then(({ body: { treasure } }) => {
         const newTreasure = {
           treasure_id: 27,
           treasure_name: "treasure-a1",
@@ -167,15 +167,30 @@ describe.only("POST /api/treasures", () => {
         expect(treasure).toMatchObject(newTreasure);
       });
   });
-  test.only('POST:400 responds with an appropriate status and error message when provided with a bad team (no team name)', () => {
+  test("POST:400 responds with an appropriate status and error message when provided with a malformed treasure body", () => {
     return request(app)
-      .post('/api/treasures')
+      .post("/api/treasures")
       .send({
-        treasure_name: "treasure-a2"
+        treasure_name: "treasure-a2",
       })
       .expect(400)
-      .then((response) => {
-        expect(response.body.msg).toBe('Bad request');
+      .then(({ body: { message } }) => {
+        expect(message).toBe("Bad Request");
+      });
+  });
+  test("POST:400 responds with an appropriate status and error message when provided invalid shop id", () => {
+    return request(app)
+      .post("/api/treasures")
+      .send({
+        treasure_name: "treasure-a3",
+        colour: "blue",
+        age: 5,
+        cost_at_auction: 11,
+        shop_id: 99,
+      })
+      .expect(400)
+      .then(({ body: { message } }) => {
+        expect(message).toBe("Bad Request");
       });
   });
 });
