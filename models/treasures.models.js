@@ -79,6 +79,7 @@ const createTreasure = (treasure) => {
 };
 
 const updateTreasure = (cost_at_auction, treasure_id) => {
+  if(cost_at_auction){
   const queryString =
     "UPDATE treasures SET cost_at_auction = $1 WHERE treasure_id = $2 RETURNING *;";
   return db
@@ -92,6 +93,12 @@ const updateTreasure = (cost_at_auction, treasure_id) => {
       }
       return rows[0];
     });
+  }else{
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+    });
+  }
 };
 
 

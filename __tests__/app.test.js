@@ -227,4 +227,13 @@ describe.only('PATCH /api/treasures/:treasure_id', () => {
       expect(message).toBe('Bad Request');
     });
   });
+  test('PATCH 400 responds with appropriate status and error when given a malformed body ', () => {
+    return request(app)
+    .patch('/api/treasures/1')
+    .send({})
+    .expect(400)
+    .then(({ body: { message } }) => {
+      expect(message).toBe('Bad Request');
+    });
+  });
 });
