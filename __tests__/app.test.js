@@ -209,9 +209,18 @@ describe.only('PATCH /api/treasures/:treasure_id', () => {
       expect(treasure).toMatchObject(patchedTreasure);
     });
   });
-  test('PATCH 400 responds with appropriate status and error when given an non-existent treasure', () => {
+  test('PATCH 404 responds with appropriate status and error when given a valid non-existent treasure', () => {
     return request(app)
     .patch('/api/treasures/99')
+    .send({cost_at_auction: 100})
+    .expect(404)
+    .then(({ body: { message } }) => {
+      expect(message).toBe('Not Found');
+    });
+  });
+  test('PATCH 400 responds with appropriate status and error when given an invalid treasure id', () => {
+    return request(app)
+    .patch('/api/treasures/hello')
     .send({cost_at_auction: 100})
     .expect(400)
     .then(({ body: { message } }) => {

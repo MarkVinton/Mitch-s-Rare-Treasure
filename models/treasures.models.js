@@ -86,8 +86,8 @@ const updateTreasure = (cost_at_auction, treasure_id) => {
     .then(({ rows }) => {
       if (rows.length === 0) {
         return Promise.reject({
-          status: 400,
-          message: "Bad Request",
+          status: 404,
+          message: "Not Found",
         });
       }
       return rows[0];
